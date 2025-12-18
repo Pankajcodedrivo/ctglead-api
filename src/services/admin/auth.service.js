@@ -45,6 +45,7 @@ const updateAdminImage = async (id, profileimageurl) => {
 };
 
 const updateUser = async (id, data) => {
+  console.log(data);
   return await User.findOneAndUpdate(
     { _id: new mongoose.Types.ObjectId(id) },
     { $set: data },

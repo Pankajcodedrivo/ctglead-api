@@ -6,10 +6,46 @@ const ApiError = require('../helpers/apiErrorConverter');
 
 const userSchema = new mongoose.Schema(
   {
-    fullName: {
+    firstName: {
       type: String,
       required: true,
+      trim: true,
     },
+
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    DOB: {
+      type: Date,
+      required: false,
+    },
+
+    maritalStatus: {
+      type: String,
+      enum: ['single', 'married', 'divorced', 'widowed'],
+      required: false,
+    },
+
+    gender: {
+      type: String,
+      enum: ['male', 'female', 'other'],
+      required: false,
+    },
+
+    phoneNumber: {
+      type: String,
+      required: false,
+      trim: true,
+      validate(value) {
+        if (!validator.isMobilePhone(value, 'any')) {
+          throw new ApiError('Invalid phone number', 400);
+        }
+      },
+    },
+
     email: {
       type: String,
       required: true,
@@ -22,24 +58,23 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
+
     profileimageurl: {
       type: String,
       default: '',
     },
+
     password: {
       type: String,
       required: false,
       trim: true,
       minlength: 8,
-      private: true, // used by the toJSON plugin
+      private: true,
     },
-    amount: {
-      type: Number,
-      default: 0,
-    },
+
     role: {
       type: String,
-      enum: ['admin', 'user'],
+      enum: ['admin', 'user', 'agency', 'agents'],
       default: 'user',
     },
   },
@@ -90,12 +125,6 @@ userSchema.statics.loginUser = async function (email, password) {
   return user;
 };
 
-// To get group info with user data
-userSchema.virtual('groupsCreated', {
-  ref: 'Group',
-  localField: '_id',
-  foreignField: 'createdBy',
-});
 userSchema.set('toObject', { virtuals: true });
 userSchema.set('toJSON', { virtuals: true });
 
