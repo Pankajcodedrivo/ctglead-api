@@ -30,7 +30,6 @@ const forgot = Joi.object({
 
 const reset = Joi.object({
   email: Joi.string().email().required(),
-  otp: Joi.string().max(4).min(4).required(),
   password: Joi.string().required(),
 });
 

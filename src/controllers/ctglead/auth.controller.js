@@ -40,7 +40,6 @@ const reset = catchAsync(async (req, res, next) => {
     if (!user) {
         throw new ApiError('User Not Found', 404);
     }
-    await otp.getOtpIfVerified(user.email, req.body.otp);
     await service.changePassword(user.email, req.body.password);
     res.status(200).send({ status: 200, message: 'Password reset Successfully' });
 });
