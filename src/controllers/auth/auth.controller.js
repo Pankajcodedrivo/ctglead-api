@@ -42,14 +42,40 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   res.status(200).send({ message: 'OTP Sent to your email address' });
 });
 
+// verify email send otp
+const verifyEmailOTP = catchAsync(async (req, res) => {
+  await otp.sendEmailOTP(req.body.email, 'email');
+  res.status(200).send({ message: 'OTP Sent to your email address' });
+});
+
+// verify phone send otp
+const verifyPhoneOTP = catchAsync(async (req, res) => {
+  await otp.sendPhoneOTP(req.body.phone, 'phone');
+  res.status(200).send({ message: 'OTP Sent to your phone' });
+});
+
 // Otp verify
 const verify = catchAsync(async (req, res, next) => {
-  const user = await service.findUserByEmail(req.body.email);
-  if (!user) {
-    throw new ApiError('User Not Found', 404);
+  const { email, phone, otpdata } = req.body;
+
+  let identifier;
+  let type;
+
+  if (email) {
+    identifier = email;
+    type = 'email';
+  } else if (phone) {
+    identifier = phone;
+    type = 'phone';
+  } else {
+    throw new ApiError('Something is wrong', 400);
   }
-  await otp.verifyOtp(user.email, req.body.otp);
-  res.status(200).send({ message: 'OTP verified successfully' });
+
+  await otp.checkVerifyOtp(identifier, otpdata, type);
+
+  res.status(200).send({
+    message: 'OTP verified successfully',
+  });
 });
 
 // Reset password
@@ -112,4 +138,6 @@ module.exports = {
   refreshTokens,
   logout,
   forgotPasswordResend,
+  verifyEmailOTP,
+  verifyPhoneOTP
 };

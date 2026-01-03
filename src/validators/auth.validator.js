@@ -28,15 +28,22 @@ const forgot = Joi.object({
   email: Joi.string().email().required(),
 });
 
+const phoneVerify = Joi.object({
+  phone: Joi.string().required(),
+});
+
 const reset = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
 
 const verify = Joi.object({
-  email: Joi.string().email().required(),
-  otp: Joi.string().max(4).min(4).required(),
-});
+  email: Joi.string().email(),
+  phone: Joi.string().pattern(/^[0-9]{10}$/),
+  otpdata: Joi.string().length(4).required(),
+})
+  .xor("email", "phone") // only one allowed
+  .required();
 
 const tokens = Joi.object({
   token: Joi.string().required(),
@@ -55,4 +62,5 @@ module.exports = {
   tokens,
   logout,
   verify,
+  phoneVerify
 };

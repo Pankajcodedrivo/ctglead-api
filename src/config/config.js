@@ -31,6 +31,12 @@ const envVarsSchema = Joi.object()
       'the from field in the emails sent by the app',
     ),
     S3_BUCKET_PATH: Joi.string().description('BUCKET PATH for AWS s3 bucket'),
+    TWILIO_ACCOUNT_SID: Joi.string().description(
+      'Please provide twilio account sid',
+    ),
+    TWILIO_AUTH_TOKEN: Joi.string().description(
+      'Please provide twilio auth token',
+    ),
   })
   .unknown();
 
@@ -65,5 +71,9 @@ module.exports = {
   },
   s3: {
     S3_BUCKET_PATH: envVars.S3_BUCKET_PATH,
+  },
+  twilio: {
+    TWILIO_ACCOUNT_SID: envVars.TWILIO_ACCOUNT_SID,
+    TWILIO_AUTH_TOKEN: envVars.TWILIO_AUTH_TOKEN,
   },
 };

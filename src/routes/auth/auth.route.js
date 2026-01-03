@@ -33,6 +33,18 @@ router.post(
 );
 
 router.post(
+  '/send-email-otp',
+  validator.body(validationSchema.forgot),
+  controller.verifyEmailOTP,
+);
+
+router.post(
+  '/send-phone-otp',
+  validator.body(validationSchema.phoneVerify),
+  controller.verifyPhoneOTP,
+);
+
+router.post(
   '/resend-otp',
   validator.body(validationSchema.forgot),
   controller.forgotPasswordResend,
