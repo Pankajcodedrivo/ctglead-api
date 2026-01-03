@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
 
     DOB: {
       type: Date,
-      required: false,
+      required: true,
     },
 
     maritalStatus: {
@@ -70,6 +70,12 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minlength: 8,
       private: true,
+    },
+
+    address: {
+      type: String,
+      required: false,
+      trim: true,
     },
 
     role: {
