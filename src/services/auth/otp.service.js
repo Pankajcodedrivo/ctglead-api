@@ -4,6 +4,12 @@ const User = require('../../models/user.model');
 const crypto = require('crypto');
 const email = require('../email/email.service');
 const config = require('../../config/config');
+const twilio = require('twilio');
+
+const client = twilio(
+  config.twilio.TWILIO_ACCOUNT_SID,
+  config.twilio.TWILIO_AUTH_TOKEN
+);
 
 function generateSecureOTP() {
   const digits = '0123456789';
@@ -14,6 +20,71 @@ function generateSecureOTP() {
   }
   return otp;
 }
+
+const createOtp = async ({ identifier, type }) => {
+  // generate OTP
+  const otp = generateSecureOTP();
+
+  // remove old OTPs for same identifier & type
+  await Otp.deleteMany({
+    identifier,
+    type,
+  });
+
+  // save OTP
+  await Otp.create({
+    otp,
+    identifier,
+    type,
+    is_verified: false,
+  });
+
+  return otp;
+};
+const sendPhoneOTP = async (phone) => {
+  try {
+    const otp = await createOtp({
+      identifier: phone,
+      type: 'phone',
+    });
+    console.log(otp)
+    await client.messages.create({
+      body: `Your verification code is ${otp}. It will expire in 5 minutes.`,
+      from: "+18885703324",
+      to: "+12816509746"
+      //to: phone,
+    });
+    return true;
+  } catch (error) {
+    throw new ApiError(error.message || 'Failed to send OTP', 500);
+  }
+};
+
+const sendEmailOTP = async (userEmail, type) => {
+  try {
+    const otp = await createOtp({
+      identifier: userEmail,
+      type: type,
+    });
+    console.log(otp)
+    return email.sendSendgridEmail(
+      userEmail,
+      'Email Verification',
+      { otp: otp.otp },
+      'd-92ce28b7f6664d5a9f53bb53003609f3',
+    );
+  } catch (e) {
+    throw new ApiError(e.message, 500);
+  }
+
+}
+
+const checkVerifyOtp = async (identifier, otp, type) => {
+  const record = await Otp.findOne({ identifier, type, otp, is_verified: false });
+  if (!record) throw new ApiError('Invalid or expired OTP');
+  await Otp.deleteOne({ _id: record._id });
+  return true;
+};
 
 const generateOtp = async (user, type) => {
   const otp = await Otp.create({ otp: generateSecureOTP(), email: user.email });
@@ -93,12 +164,6 @@ const verifyOtp = async (email, otp) => {
 
   otpindb.is_verify = true;
   otpindb.save();
-  const updateemailVerify = await User.findOneAndUpdate(
-    { email },
-    { isEmailVerified: true },
-    { new: true },
-  );
-
   return;
 };
 
@@ -107,4 +172,7 @@ module.exports = {
   getOtpIfVerified,
   resendOtp,
   verifyOtp,
+  sendEmailOTP,
+  checkVerifyOtp,
+  sendPhoneOTP
 };

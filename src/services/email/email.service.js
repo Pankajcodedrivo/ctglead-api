@@ -2,15 +2,13 @@ const sgMail = require('@sendgrid/mail');
 const config = require('../../config/config');
 const logger = require('../../config/logger');
 
-const sendSendgridEmail = async (to, subject, otp, tid) => {
+const sendSendgridEmail = async (to, subject, data, tid) => {
   const mailData = {
     to,
     from: config.email.from,
     subject,
     templateId: tid,
-    dynamic_template_data: {
-      otp
-    },
+    dynamic_template_data: data,
   };
   await sendSGEmail(mailData);
 };

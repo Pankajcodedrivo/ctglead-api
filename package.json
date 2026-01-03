@@ -58,6 +58,7 @@
     "socket.io": "^4.8.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
+    "twilio": "^5.11.1",
     "validator": "^13.9.0",
     "winston": "^3.10.0",
     "winston-mongodb": "^5.1.1",

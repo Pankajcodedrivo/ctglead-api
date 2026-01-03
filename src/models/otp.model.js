@@ -9,26 +9,37 @@ const otpSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    email: {
+
+    type: {
+      type: String,
+      enum: ['email', 'phone'],
+      required: true,
+    },
+
+    identifier: {
       type: String,
       required: true,
       trim: true,
       lowercase: true,
       validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new ApiError('Invalid Email address', 400);
+        if (this.type === 'email' && !validator.isEmail(value)) {
+          throw new ApiError('Invalid email address', 400);
+        }
+
+        if (this.type === 'phone' && !validator.isMobilePhone(value, 'any')) {
+          throw new ApiError('Invalid phone number', 400);
         }
       },
     },
-    is_verify: {
+
+    is_verified: {
       type: Boolean,
-      enum: [true, false],
       default: false,
     },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 otpSchema.plugin(toJSON);
