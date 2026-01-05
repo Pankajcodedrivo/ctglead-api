@@ -1,5 +1,6 @@
 const service = require('../../services/auth/auth.service');
 const token = require('../../services/auth/token.service');
+const emailService = require('../../services/email/email.service');
 const otp = require('../../services/auth/otp.service');
 const catchAsync = require('../../helpers/asyncErrorHandler');
 const ApiError = require('../../helpers/apiErrorConverter');
@@ -14,6 +15,14 @@ const register = catchAsync(async (req, res, next) => {
     tokens,
   });
 });
+
+const notifyAdmin = catchAsync(async (req, res) => {
+  const bodyData = req.body;
+  await emailService.sendSendgridEmail("bittus@scaleupsoftware.io", "Notify", "ssssssss", bodyData);
+  res.status(201).send({
+    message: "Your data has been sent to the admin. They will contact you soon.",
+  });
+})
 
 // Login
 const login = catchAsync(async (req, res, next) => {
@@ -44,6 +53,10 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 
 // verify email send otp
 const verifyEmailOTP = catchAsync(async (req, res) => {
+  const user = await service.findUserByEmail(req.body.email);
+  if (user) {
+    throw new ApiError('Email address is already exists', 404);
+  }
   await otp.sendEmailOTP(req.body.email, 'email');
   res.status(200).send({ message: 'OTP Sent to your email address' });
 });
@@ -139,5 +152,6 @@ module.exports = {
   logout,
   forgotPasswordResend,
   verifyEmailOTP,
-  verifyPhoneOTP
+  verifyPhoneOTP,
+  notifyAdmin
 };
