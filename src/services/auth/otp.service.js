@@ -60,7 +60,7 @@ const sendPhoneOTP = async (phone) => {
   }
 };
 
-const sendEmailOTP = async (userEmail, type) => {
+const sendEmailOTP = async (userEmail, type, tempID) => {
   try {
     const otp = await createOtp({
       identifier: userEmail,
@@ -70,8 +70,8 @@ const sendEmailOTP = async (userEmail, type) => {
     return email.sendSendgridEmail(
       userEmail,
       'Email Verification',
-      { otp: otp.otp },
-      'd-92ce28b7f6664d5a9f53bb53003609f3',
+      { otp: otp },
+      tempID,
     );
   } catch (e) {
     throw new ApiError(e.message, 500);
@@ -80,7 +80,7 @@ const sendEmailOTP = async (userEmail, type) => {
 }
 
 const checkVerifyOtp = async (identifier, otp, type) => {
-  const record = await Otp.findOne({ identifier, type, otp, is_verified: false });
+  const record = await Otp.findOne({ identifier, otp, type, is_verified: false });
   if (!record) throw new ApiError('Invalid or expired OTP');
   await Otp.deleteOne({ _id: record._id });
   return true;

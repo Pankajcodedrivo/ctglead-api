@@ -19,7 +19,7 @@ router.post(
 
 router.patch(
     '/reset-password',
-    validator.body(validationSchema.reset),
+    validator.body(validationSchema.ctgreset),
     controller.reset,
 );
 
@@ -31,7 +31,7 @@ router.post(
 
 router.post(
     '/verify-otp',
-    validator.body(validationSchema.verify),
+    validator.body(validationSchema.verifyCtg),
     controller.verify,
 );
 

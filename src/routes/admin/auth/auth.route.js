@@ -19,7 +19,7 @@ router.post(
 
 router.patch(
   '/reset-password',
-  validator.body(validationSchema.reset),
+  validator.body(validationSchema.resetAdmin),
   controller.reset,
 );
 

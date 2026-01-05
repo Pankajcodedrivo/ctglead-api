@@ -24,21 +24,15 @@ const login = catchAsync(async (req, res, next) => {
   const tokens = await token.generateAuthTokens(user);
   res.status(200).send({
     message: 'Login successful',
-    tokens: {
-      accessToken: tokens.access,
-      refreshToken: tokens.refresh,
-    },
-    user,
+    data: {
+      tokens, user
+    }
   });
 });
 
 // Forget password send otp
 const forgotPassword = catchAsync(async (req, res, next) => {
-  const user = await service.findUserByEmail(req.body.email);
-  if (!user) {
-    throw new ApiError('User Not Found', 404);
-  }
-  await otp.generateOtp(user, 'forgetPass');
+  await otp.sendEmailOTP(req.body.email, 'email', 'd-1c767f05cc6249708e590c9298915074');
   res.status(200).send({ message: 'OTP Sent to your email address' });
 });
 
@@ -84,7 +78,6 @@ const reset = catchAsync(async (req, res, next) => {
   if (!user) {
     throw new ApiError('User Not Found', 404);
   }
-  //await otp.getOtpIfVerified(user.email, req.body.otp);
   await service.changePassword(user.email, req.body.password);
   res.status(200).send({ message: 'Password reset Successfull' });
 });

@@ -23,15 +23,8 @@ const leadLogin = catchAsync(async (req, res, next) => {
 
 // Forgot password
 const forgotPassword = catchAsync(async (req, res, next) => {
-    const user = await service.findUserByEmail(req.body.email);
-    if (!user) {
-        throw new ApiError('User Not Found', 404);
-    }
-    if (user.role != 'agency') {
-        throw new ApiError('This email id is not belongs to an agency', 404);
-    }
-    await otp.generateOtp(user, 'forgetPass');
-    res.status(200).send({ status: 200, message: 'An OTP has been sent to your email.' });
+    await otp.sendEmailOTP(req.body.email, 'email', 'd-fbb00a5b698d49c89a1911bdb02c8fc1');
+    res.status(200).send({ status: 200, message: 'OTP Sent to your email address' });
 });
 
 // Reset Password
@@ -78,11 +71,7 @@ const forgotPasswordResend = catchAsync(async (req, res, next) => {
 
 // Otp verify
 const verify = catchAsync(async (req, res, next) => {
-    const user = await service.findUserByEmail(req.body.email);
-    if (!user) {
-        throw new ApiError('User Not Found', 404);
-    }
-    await otp.verifyOtp(user.email, req.body.otp);
+    await otp.checkVerifyOtp(req.body.email, req.body.otp, 'email');
     res.status(200).send({ message: 'Otp verified successfully' });
 });
 
