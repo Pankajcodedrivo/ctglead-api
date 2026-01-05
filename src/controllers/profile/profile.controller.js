@@ -51,7 +51,7 @@ const updateProfile = catchAsync(async (req, res, next) => {
   const user = await service.updateUser(req.user._id, req.body);
   res
     .status(200)
-    .send({ message: 'Profile data update successfully', user: user });
+    .send({ message: 'Profile data update successfully', data: { user: user } });
 });
 
 const listusers = catchAsync(async (req, res, next) => {

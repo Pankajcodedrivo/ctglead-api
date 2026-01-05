@@ -68,7 +68,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
 
-    DOB: {
+    dob: {
       type: Date,
     },
 
@@ -127,6 +127,12 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minlength: 8,
       private: true,
+    },
+
+    address: {
+      type: String,
+      required: false,
+      trim: true,
     },
 
     role: {

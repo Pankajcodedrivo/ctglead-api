@@ -13,7 +13,7 @@ router.get(
   controller.edituser,
 );
 
-router.use(auth('', true));
+router.use(auth('user', true));
 router.get('/users-list', controller.listusers);
 router.delete('/delete', controller.deleteAccount);
 router.patch(
@@ -24,7 +24,7 @@ router.patch(
 router.get('/', controller.getProfile);
 router.patch(
   '/update',
-  upload.single('profileimageurl'),
+  // upload.single('profileimageurl'),
   controller.updateProfile,
 );
 router.patch(

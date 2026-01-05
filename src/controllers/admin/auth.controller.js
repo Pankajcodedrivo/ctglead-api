@@ -19,19 +19,8 @@ const adminLogin = catchAsync(async (req, res, next) => {
 
 // Forgot password
 const forgotPassword = catchAsync(async (req, res, next) => {
-  const user = await service.findUserByEmail(req.body.email);
-  if (!user) {
-    throw new ApiError('User Not Found', 404);
-  }
-  if (user.role != 'admin') {
-    throw new ApiError('This email id is not belongs to an Admin', 404);
-  }
-
-  await otp.generateOtp(user, 'forgetPass');
-  res.status(200).send({
-    status: 200,
-    message: 'An OTP verification link has been sent to your email.',
-  });
+  await otp.sendEmailOTP(req.body.email, 'email', 'd-35900246824749c7a6189c533074bc33');
+  res.status(200).send({ status: 200, message: 'OTP Sent to your email address' });
 });
 
 // Reset Password
@@ -40,7 +29,7 @@ const reset = catchAsync(async (req, res, next) => {
   if (!user) {
     throw new ApiError('User Not Found', 404);
   }
-  await otp.getOtpIfVerified(user.email, req.body.otp);
+  await otp.checkVerifyOtp(user.email, req.body.otp, 'email');
   await service.changePassword(user.email, req.body.password);
   res.status(200).send({ status: 200, message: 'Password reset Successfully' });
 });
