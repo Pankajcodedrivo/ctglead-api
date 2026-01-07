@@ -12,6 +12,17 @@ router.post(
   controller.register,
 );
 
+router.post(
+  '/qoutes/register',
+  validator.body(validationSchema.qoutesRegister),
+  controller.register,
+);
+router.post(
+  '/nofity-admin',
+  validator.body(validationSchema.notifyAdmin),
+  controller.notifyAdmin,
+);
+
 router.post('/login', validator.body(validationSchema.login), controller.login);
 
 router.post(

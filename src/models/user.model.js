@@ -4,8 +4,58 @@ const { toJSON, paginate } = require('./plugins');
 const bcrypt = require('bcrypt');
 const ApiError = require('../helpers/apiErrorConverter');
 
+const memberSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
+    },
+
+    relationship: {
+      type: String,
+      trim: true,
+    },
+
+    method: {
+      type: String,
+      enum: ["invite", "manual"],
+      required: true,
+    },
+
+    inviteType: {
+      type: String,
+      enum: ["email", "phone"],
+    },
+
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      validate(value) {
+        if (value && !validator.isEmail(value)) {
+          throw new ApiError("Invalid member email", 400);
+        }
+      },
+    },
+
+    phone: {
+      type: String,
+      trim: true,
+    },
+
+    status: {
+      type: String,
+      enum: ["pending", "active"],
+      default: "pending",
+    },
+  },
+  { _id: false }
+);
+
+/* ================= USER ================= */
 const userSchema = new mongoose.Schema(
   {
+    /* BASIC INFO */
     firstName: {
       type: String,
       required: true,
@@ -18,32 +68,34 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
 
-    DOB: {
+    dob: {
       type: Date,
-      required: true,
     },
 
     maritalStatus: {
       type: String,
-      enum: ['single', 'married', 'divorced', 'widowed'],
-      required: false,
+      enum: ["single", "married", "divorced", "widowed"],
     },
 
     gender: {
       type: String,
-      enum: ['male', 'female', 'other'],
-      required: false,
+      enum: ["male", "female", "other"],
     },
 
+    /* CONTACT */
     phoneNumber: {
       type: String,
-      required: false,
       trim: true,
       validate(value) {
-        if (!validator.isMobilePhone(value, 'any')) {
-          throw new ApiError('Invalid phone number', 400);
+        if (value && !validator.isMobilePhone(value, "any")) {
+          throw new ApiError("Invalid phone number", 400);
         }
       },
+    },
+
+    phoneVerified: {
+      type: Boolean,
+      default: false,
     },
 
     email: {
@@ -54,19 +106,24 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       validate(value) {
         if (!validator.isEmail(value)) {
-          throw new ApiError('Invalid email', 400);
+          throw new ApiError("Invalid email", 400);
         }
       },
     },
 
-    profileimageurl: {
-      type: String,
-      default: '',
+    emailVerified: {
+      type: Boolean,
+      default: false,
     },
 
+    profileimageurl: {
+      type: String,
+      default: "",
+    },
+
+    /* AUTH */
     password: {
       type: String,
-      required: false,
       trim: true,
       minlength: 8,
       private: true,
@@ -80,13 +137,38 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ['admin', 'user', 'agency', 'agents'],
-      default: 'user',
+      enum: ["admin", "user", "agency", "agents"],
+      default: "user",
+    },
+
+    /* ADDRESS */
+    address: String,
+    unit: String,
+    city: String,
+    state: String,
+    zipCode: String,
+    isTexas: Boolean,
+
+    /* PRODUCTS */
+    products: [
+      {
+        type: String,
+        enum: ["auto", "life", "property", "renters", "business", "recreational"],
+      },
+    ],
+
+    /* MEMBERS */
+    members: [memberSchema],
+
+    /* QUESTIONS / ANSWERS */
+    answers: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
     },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 userSchema.index({ username: 'text', email: 'text' });
