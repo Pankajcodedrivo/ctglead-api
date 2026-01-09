@@ -141,6 +141,24 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
 
+    // Notification Pref
+    emailNotification: {
+      type: Boolean,
+      default: true,
+    },
+    textNotification: {
+      type: Boolean,
+      default: true,
+    },
+    pushNotification: {
+      type: Boolean,
+      default: true,
+    },
+    communicationPref: {
+      type: String,
+      default: 'email',
+    },
+
     /* ADDRESS */
     address: String,
     unit: String,

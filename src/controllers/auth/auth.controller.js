@@ -11,8 +11,8 @@ const register = catchAsync(async (req, res, next) => {
   const tokens = await token.generateAuthTokens(user);
   res.status(201).send({
     message: 'Registration successful, please complete your profile setup',
-    user,
-    tokens,
+    //user,
+    //tokens,
   });
 });
 
@@ -47,11 +47,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 
 // verify email send otp
 const verifyEmailOTP = catchAsync(async (req, res) => {
-  const user = await service.findUserByEmail(req.body.email);
-  if (user) {
-    throw new ApiError('Email address is already exists', 404);
-  }
-  await otp.sendEmailOTP(req.body.email, 'email');
+  await otp.sendEmailOTP(req.body.email, 'email', 'd-1c767f05cc6249708e590c9298915074');
   res.status(200).send({ message: 'OTP Sent to your email address' });
 });
 

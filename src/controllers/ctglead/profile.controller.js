@@ -44,16 +44,34 @@ const getProfile = catchAsync(async (req, res, next) => {
     res.status(200).send({ message: 'Profile Data', user: req.user });
 });
 
-// Update profile with image
 const updateProfile = catchAsync(async (req, res, next) => {
     /*if (req.file) {
         req.body.profileimageurl = req.file.location;
     }*/
     const user = await service.updateUser(req.user._id, req.body);
-    res
-        .status(200)
-        .send({ message: 'Profile data update successfully', data: { user: user } });
+    let message = "Profile updated successfully";
+
+    // Notification settings
+    const isNotificationUpdate =
+        "emailNotification" in req.body ||
+        "textNotification" in req.body ||
+        "pushNotification" in req.body;
+
+    // Communication preference
+    const isCommPrefUpdate = "communicationPref" in req.body;
+
+    if (isNotificationUpdate) {
+        message = "Notification settings updated successfully";
+    } else if (isCommPrefUpdate) {
+        message = "Communication preferences updated successfully";
+    }
+
+    res.status(200).send({
+        message,
+        data: { user },
+    });
 });
+
 
 const listusers = catchAsync(async (req, res, next) => {
     const id = req.user._id;

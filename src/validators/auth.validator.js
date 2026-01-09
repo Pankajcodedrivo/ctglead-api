@@ -118,9 +118,12 @@ const resetAdmin = Joi.object({
 });
 
 const verify = Joi.object({
-  email: Joi.string().email().required(),
-  otpdata: Joi.string().max(4).min(4).required(),
-});
+  email: Joi.string().email(),
+  phone: Joi.string().pattern(/^[0-9]{10}$/),
+  otpdata: Joi.string().length(4).required(),
+})
+  .xor("email", "phone") // only one allowed
+  .required();
 
 const verifyCtg = Joi.object({
   email: Joi.string().email().required(),
@@ -142,6 +145,10 @@ const ctgreset = Joi.object({
   password: Joi.string().required(),
 });
 
+const phoneVerify = Joi.object({
+  phone: Joi.string().required(),
+});
+
 module.exports = {
   register,
   login,
@@ -152,5 +159,8 @@ module.exports = {
   verify,
   phoneVerify,
   qoutesRegister,
-  notifyAdmin
+  notifyAdmin,
+  resetAdmin,
+  verifyCtg,
+  ctgreset
 };

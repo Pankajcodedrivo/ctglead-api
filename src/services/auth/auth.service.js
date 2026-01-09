@@ -69,6 +69,11 @@ const deleteAccountById = async (id) => {
 
 // Update password
 const updatePassword = async (user, newpass, oldpass) => {
+  console.log(user.password);
+  console.log('---------');
+  console.log(newpass);
+  console.log('---------');
+  console.log(oldpass);
   const isMatch = await bcrypt.compare(oldpass, user.password);
   if (!isMatch) {
     throw new ApiError('Invalid credentials', 400);
