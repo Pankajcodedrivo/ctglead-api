@@ -43,6 +43,10 @@ app.use(
       '*',
       'http://localhost:5174',
       'http://localhost:5000',
+      'https://admin-ctg.codedrivo.com',
+      'https://quotes-ctg.codedrivo.com',
+      'https://lead-ctg.codedrivo.com',
+
     ],
   }),
 );
