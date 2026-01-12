@@ -8,7 +8,7 @@ const validator = require('express-joi-validation').createValidator({
 router.use(auth('agency', false));
 
 router.post(
-    '/create-support',
+    '/create-support-request',
     validator.body(validationSchema.supportValidation),
     controller.createSupport,
 );

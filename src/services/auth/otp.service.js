@@ -76,8 +76,26 @@ const sendEmailOTP = async (userEmail, type, tempID) => {
   } catch (e) {
     throw new ApiError(e.message, 500);
   }
-
 }
+
+// Send support email
+const sendSupportEmail = async (userEmail, tempID, data) => {
+  try {
+    return email.sendSendgridEmail(
+      userEmail,
+      'Lead Support Request',
+      {
+        name: data.fullname,
+        email: data.email,
+        phone: data.phone || 'N/A',
+        message: data.message,
+      },
+      tempID
+    );
+  } catch (e) {
+    throw new ApiError(e.message, 500);
+  }
+};
 
 const checkVerifyOtp = async (identifier, otp, type) => {
   const record = await Otp.findOne({ identifier, otp, type, is_verified: false });
@@ -174,5 +192,6 @@ module.exports = {
   verifyOtp,
   sendEmailOTP,
   checkVerifyOtp,
-  sendPhoneOTP
+  sendPhoneOTP,
+  sendSupportEmail
 };

@@ -16,6 +16,7 @@ const adminDashboard = require('./admin/dashboard.route');
 // ctg lead
 const leadAuth = require('./ctglead/auth/auth.route');
 const leadProfile = require('./ctglead/profile.route');
+const leadSupport = require('./ctglead/support.route');
 
 // all routes
 router.use('/auth', authRouter);
@@ -33,5 +34,6 @@ router.use('/admin/setting', adminSetting);
 // ctg lead route
 router.use('/lead', leadAuth);
 router.use('/lead/profile', leadProfile);
+router.use('/lead/support', leadSupport);
 
 module.exports = router;
