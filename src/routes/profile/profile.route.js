@@ -7,26 +7,32 @@ const validator = require('express-joi-validation').createValidator({
 });
 const upload = require('../../middlewares/multer.middleware');
 
+router.use(auth('user', true));
+
 router.get(
   '/get-user/:id',
   validator.params(validationSchema.singleId),
   controller.edituser,
 );
 
-router.use(auth('user', true));
 router.get('/users-list', controller.listusers);
+
 router.delete('/delete', controller.deleteAccount);
+
 router.patch(
   '/change-password',
   validator.body(validationSchema.passchange),
   controller.passwordChange,
 );
+
 router.get('/', controller.getProfile);
+
 router.patch(
   '/update',
   // upload.single('profileimageurl'),
   controller.updateProfile,
 );
+
 router.patch(
   '/notification',
   validator.body(validationSchema.notificationToggle),
@@ -38,47 +44,6 @@ router.post(
   validator.body(validationSchema.support),
   controller.addSupport,
 );
-
-router.patch(
-  '/add-intro-media',
-  upload.array('intromedia', 10),
-  controller.addIntroMedia,
-);
-
-router.delete(
-  '/delete-intro-media/:id',
-  validator.params(validationSchema.singleId),
-  controller.deleteIntroMedia,
-);
-
-router.post(
-  '/add-private-media',
-  upload.single('privatemedia'),
-  controller.addPrivateMedia,
-);
-
-router.delete(
-  '/delete-private-media/:id',
-  validator.params(validationSchema.singleId),
-  controller.deletePrivateMedia,
-);
-
-router.get(
-  '/view-private-media/:id',
-  validator.params(validationSchema.singleId),
-  controller.viewPrivateMedia,
-);
-
-router.patch(
-  '/add-verification',
-  upload.fields([
-    { name: 'idcardimage', maxCount: 1 },
-    { name: 'selfie', maxCount: 1 },
-  ]),
-  controller.addVerfication,
-);
-
-router.patch('/social-links', controller.UpdateSocialLinks);
 
 //router.get('/get-filter-types', filterController.getControllerUnickTypes);
 //router.get('/get-filter-names/:type', filterController.getDataByType);
