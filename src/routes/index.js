@@ -6,11 +6,11 @@ const Profile = require('./profile/profile.route');
 const settings = require('./site-settings/sitesettings.route');
 const pages = require('../routes/page.route');
 const userSupport = require('../routes/support.route');
+const userDocument = require('../routes/document.route');
 
 //admin profile
 const adminProfile = require('./admin/profile.route');
 const userManagement = require('./admin/user.route');
-
 const adminSetting = require('./admin/setting.route');
 const adminDashboard = require('./admin/dashboard.route');
 
@@ -25,6 +25,7 @@ router.use('/profile', Profile);
 router.use('/settings', settings);
 router.use('/pages', pages);
 router.use('/support', userSupport);
+router.use('/document', userDocument);
 
 // all admin route
 router.use('/admin', adminAuth);
