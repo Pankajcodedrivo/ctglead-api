@@ -5,20 +5,13 @@ const pagination = Joi.object({
   page: Joi.string().required(),
 });
 
-const addTeam = Joi.object({
-  teamName: Joi.string().required().messages({
-    'any.required': 'Name is required.',
-  }),
-  location: Joi.string().required().messages({
-    'any.required': 'Location is required.',
-  }),
-  randomNumber: Joi.optional(),
-  seedNumber: Joi.string().required().messages({
-    'any.required': 'Seed number is required.',
+const addCareer = Joi.object({
+  careerName: Joi.string().required().messages({
+    'any.required': 'Career name is required.',
   }),
 });
 
-const updateTeam = Joi.object({});
+const updateCareer = Joi.object({});
 
 const singleId = Joi.object({
   id: Joi.string().required(),
@@ -32,8 +25,8 @@ const singleUserId = Joi.object({
 
 module.exports = {
   pagination,
-  addTeam,
+  addCareer,
   singleId,
-  updateTeam,
+  updateCareer,
   singleUserId
 };

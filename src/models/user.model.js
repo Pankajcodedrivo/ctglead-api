@@ -69,17 +69,17 @@ const userSchema = new mongoose.Schema(
     },
 
     dob: {
-      type: Date,
+      type: String,
     },
 
     maritalStatus: {
       type: String,
-      enum: ["single", "married", "divorced", "widowed"],
+      enum: ["single", "married", "domestic Partnership", "civil Union", 'divorced', 'widowed', 'separated'],
     },
 
     gender: {
       type: String,
-      enum: ["male", "female", "other"],
+      enum: ["male", "female"],
     },
 
     /* CONTACT */
@@ -141,6 +141,14 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
 
+    careerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Career',
+      required: function () {
+        return this.role === 'agency';
+      },
+    },
+
     // Notification Pref
     emailNotification: {
       type: Boolean,
@@ -188,6 +196,13 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre('validate', function (next) {
+  if (this.role !== 'agency') {
+    this.careerId = undefined;
+  }
+  next();
+});
 
 userSchema.index({ username: 'text', email: 'text' });
 

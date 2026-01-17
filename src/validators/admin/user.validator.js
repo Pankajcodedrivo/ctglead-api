@@ -19,13 +19,39 @@ const pagination = Joi.object({
 });
 
 const addUser = Joi.object({
-  fullName: Joi.string().required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
   email: Joi.string().email().required(),
+  phoneNumber: Joi.string().required(),
+  gender: Joi.string().required(),
+  maritalStatus: Joi.string().required(),
+  role: Joi.string().valid("admin", "user", "agency", "agents").required(),
+  careerId: Joi.when("role", {
+    is: "agency",
+    then: Joi.string().required().messages({
+      "any.required": "Career is required for agency users",
+    }),
+    otherwise: Joi.forbidden(),
+  }),
+  DOB: Joi.string().required(),
   password: Joi.string().required(),
 });
 
 const updateuser = Joi.object({
-  fullName: Joi.string().required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
+  phoneNumber: Joi.string().required(),
+  gender: Joi.string().required(),
+  maritalStatus: Joi.string().required(),
+  role: Joi.string().valid("admin", "user", "agency", "agents").required(),
+  careerId: Joi.when("role", {
+    is: "agency",
+    then: Joi.string().required().messages({
+      "any.required": "Career is required for agency users",
+    }),
+    otherwise: Joi.forbidden(),
+  }),
+  DOB: Joi.string().required(),
 });
 
 const singleId = Joi.object({

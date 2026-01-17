@@ -13,6 +13,7 @@ const adminProfile = require('./admin/profile.route');
 const userManagement = require('./admin/user.route');
 const adminSetting = require('./admin/setting.route');
 const adminDashboard = require('./admin/dashboard.route');
+const adminCareer = require('./admin/career.route');
 
 // ctg lead
 const leadAuth = require('./ctglead/auth/auth.route');
@@ -33,6 +34,7 @@ router.use('/admin/dashboard', adminDashboard);
 router.use('/admin/profile', adminProfile);
 router.use('/admin/user-management', userManagement);
 router.use('/admin/setting', adminSetting);
+router.use('/admin/career', adminCareer);
 
 // ctg lead route
 router.use('/lead', leadAuth);

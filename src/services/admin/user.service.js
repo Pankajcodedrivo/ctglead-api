@@ -27,9 +27,10 @@ const userListFind = async (
       query.role = role;
     }
 
-    if (id) {
-      query._id = { $ne: id };
-    }
+    /* if (id) {
+       query._id = { $ne: id };
+     }*/
+
     const skip = (page - 1) * limit;
     const totalItems = await User.find(query).countDocuments();
     const users = await User.find(query)
@@ -68,16 +69,6 @@ const editUser = async (id) => {
   } catch (e) {
     throw new ApiError(e.message, 404);
   }
-};
-
-const addamount = async (id, amount) => {
-  const updateAmount = await User.findByIdAndUpdate(
-    id,
-    { $inc: { amount: amount } },
-    { new: true },
-  );
-
-  return updateAmount;
 };
 
 const updateUser = async (id, data) => {
@@ -169,6 +160,5 @@ module.exports = {
   userVerification,
   userBlockUnblock,
   getUsersCount,
-  userInvitations,
-  addamount,
+  userInvitations
 };

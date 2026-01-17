@@ -35,12 +35,6 @@ router.patch(
   controller.updateUser,
 );
 
-router.patch(
-  '/add-amount/:id',
-  validator.params(validationSchema.singleId),
-  controller.addamount,
-);
-
 router.delete(
   '/delete-user/:id',
   validator.params(validationSchema.singleId),

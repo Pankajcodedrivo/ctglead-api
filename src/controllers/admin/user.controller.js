@@ -30,14 +30,13 @@ const addUser = catchAsync(async (req, res) => {
 
 const edituser = catchAsync(async (req, res) => {
   const userData = await service.editUser(req.params.id);
-  const teamData = await service.getTeamByUserId(req.params.id);
-  res.status(200).send({ status: 200, userData: userData, team: teamData });
+  res.status(200).send({ status: 200, userData: userData });
 });
 
 const updateUser = catchAsync(async (req, res) => {
   const id = req.params.id;
   const data = { ...req.body };
-
+  console.log(data);
   if (req.file && req.file.location) {
     data.profileimageurl = req.file.location;
   }
@@ -46,15 +45,6 @@ const updateUser = catchAsync(async (req, res) => {
     status: 200,
     message: 'User updated successfully',
     userData: updateData,
-  });
-});
-
-const addamount = catchAsync(async (req, res) => {
-  const addData = await service.addamount(req.params.id, req.body.amount);
-  res.status(200).json({
-    status: 200,
-    message: 'Amount added successfully',
-    userData: addData,
   });
 });
 
@@ -101,6 +91,5 @@ module.exports = {
   deleteUser,
   userVerification,
   userBlockUnblock,
-  getInvitations,
-  addamount,
+  getInvitations
 };
